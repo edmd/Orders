@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.Logic", "Orders.Logic\Orders.Logic.csproj", "{B9CC695B-BEC0-4AB6-9E8C-7D7C4CE4626D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.Logic", "Orders.Logic\Orders.Logic.csproj", "{B9CC695B-BEC0-4AB6-9E8C-7D7C4CE4626D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.Tests", "Orders.Tests\Orders.Tests.csproj", "{5F49CDB0-EB8F-40AD-AF5A-FDBD068D2607}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B9CC695B-BEC0-4AB6-9E8C-7D7C4CE4626D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9CC695B-BEC0-4AB6-9E8C-7D7C4CE4626D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9CC695B-BEC0-4AB6-9E8C-7D7C4CE4626D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F49CDB0-EB8F-40AD-AF5A-FDBD068D2607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F49CDB0-EB8F-40AD-AF5A-FDBD068D2607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F49CDB0-EB8F-40AD-AF5A-FDBD068D2607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F49CDB0-EB8F-40AD-AF5A-FDBD068D2607}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

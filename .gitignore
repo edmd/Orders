@@ -4,3 +4,6 @@
 
 /Orders.Logic/obj
 /Orders.Logic/bin/Debug/netstandard2.0
+/Orders.Tests/bin/Debug/netcoreapp3.1
+/Orders.Tests/obj
+/.vs/Orders/v16
