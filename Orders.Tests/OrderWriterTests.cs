@@ -6,40 +6,42 @@ namespace Orders.Tests
 {
     public class OrderWriterTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
+        private ConsoleWriter<IOrder> _consoleWriter;
 
-        [Test]
+        [Test(), Category("Unit")]
         public void OrderWriterSuccess()
         {
-            Assert.Pass();
+            _consoleWriter = new ConsoleWriter<IOrder>();
+
+            Assert.IsTrue(_consoleWriter.Output(DataGenerator.GetOrders().Where(o => o.Size <= (int)OrderSize.AnySize).OrderBy(o => o.Price)).Result == 30,
+                "The number of Order results is not equal to the number that should be returned {30}.");
         }
 
         [Test]
         public void OrderWriterFailure()
         {
-            Assert.Pass();
+            _consoleWriter = new ConsoleWriter<IOrder>();
+
+            Assert.IsTrue(_consoleWriter.Output(DataGenerator.GetOrders().Where(o => o.Size <= (int)OrderSize.InvalidSize).OrderBy(o => o.Price)).Result == 0,
+                "The number of Order results is not equal to the number that should be returned {0}.");
         }
 
         [Test]
         public void OrderWriterSmallOrders()
         {
-            Assert.Pass();
+            _consoleWriter = new ConsoleWriter<IOrder>();
+
+            Assert.IsTrue(_consoleWriter.Output(DataGenerator.GetOrders().Where(o => o.Size <= (int)OrderSize.SmallOrder).OrderBy(o => o.Price)).Result == 10,
+                "The number of Order results is not equal to the number that should be returned {10}.");
         }
 
         [Test]
         public void OrderWriterLargeOrders()
         {
-            Assert.Pass();
-        }
+            _consoleWriter = new ConsoleWriter<IOrder>();
 
-        [Test]
-        public void OrderWriterAllOrders()
-        {
-            Assert.Pass();
+            Assert.IsTrue(_consoleWriter.Output(DataGenerator.GetOrders().Where(o => o.Size <= (int)OrderSize.LargeOrder).OrderBy(o => o.Price)).Result == 20,
+                "The number of Order results is not equal to the number that should be returned {10}.");
         }
-
     }
 }

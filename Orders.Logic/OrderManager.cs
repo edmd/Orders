@@ -1,140 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Orders.Logic
 {
-    public class OrderManager
+    public interface IManager
     {
-        private readonly IOrderStore orderStore;
-        public OrderManager(IOrderStore orderStore)
-        {
-            this.orderStore = orderStore;
-        }
-        public void WriteOutSmallOrders()
-        {
-            var orders = orderStore.GetOrders();
-            SmallOrderFilter filter = new SmallOrderFilter(new OrderWriter(),
-           orders);
-            filter.WriteOutFiltrdAndPriceSortedOrders(new OrderWriter());
-        }
-        public void WriteOutLargeOrders()
-        {
-            var orders = orderStore.GetOrders();
-            LargeOrderFilter filter = new LargeOrderFilter(new OrderWriter(),
-           orders);
-            filter.WriteOutFiltrdAndPriceSortedOrders(new OrderWriter());
-        }
+        Task<bool> OutputOrders(int filterSize);
     }
-    public class LargeOrderFilter
+
+    public class OrderManager : IManager
     {
-        private IOrderWriter orderWriter;
-        private List<Order> orders;
-        public LargeOrderFilter(IOrderWriter orderWriter, List<Order> orders)
+        private readonly IOrderRepository _repository;
+        private readonly IWriter<IOrder> _writer;
+
+        public OrderManager(IOrderRepository repository, IWriter<IOrder> writer)
         {
-            filterSize = "100";
-            this.orderWriter = orderWriter;
-            this.orders = orders;
+            _repository = repository;
+            _writer = writer;
         }
-        protected string filterSize;
-        public void WriteOutFiltrdAndPriceSortedOrders(IOrderWriter writer)
+
+        public Task<bool> OutputOrders(int filterSize = (int)OrderSize.AnySize)
         {
-            List<Order> filteredOrders = this.FilterOrdersSmallerThan(orders,
-           filterSize);
-            Enumerable.OrderBy(filteredOrders, o => o.Price);
-            ObservableCollection<Order> observableCollection =
-            new ObservableCollection<Order>();
-            foreach (Order o in filteredOrders)
-            {
-                observableCollection.Add(o);
-            }
-            writer.WriteOrders(observableCollection);
-        }
-        protected List<Order> FilterOrdersSmallerThan(List<Order> allOrders,
-       string size)
-        {
-            List<Order> filtered = new List<Order>();
-            for (int i = 0; i <= allOrders.Count; i++)
-            {
-                int number = orders[i].toNumber(size);
-                if (allOrders[i].Size <= number)
-                {
-                    continue;
-                }
-                else
-                {
-                    filtered.Add(orders[i]);
-                }
-            }
-            return filtered;
-        }
-    }
-    public class SmallOrderFilter : LargeOrderFilter
-    {
-        public SmallOrderFilter(IOrderWriter orderWriter, List<Order> orders)
-        : base(orderWriter, orders)
-        {
-            filterSize = "10";
-        }
-    }
-    public class Order
-    {
-        public double Price
-        {
-            get { return this.dPrice; }
-            set { this.dPrice = value; }
-        }
-        public int Size
-        {
-            get { return this.iSize; }
-            set { this.iSize = value; }
-        }
-        public string Symbol
-        {
-            get { return this.sSymbol; }
-            set { this.sSymbol = value; }
-        }
-        private double dPrice;
-        private int iSize;
-        private string sSymbol;
-        public int toNumber(String Input)
-        {
-            bool canBeConverted = false;
-            int n = 0;
             try
             {
-                n = Convert.ToInt32(Input);
-                if (n != 0) canBeConverted = true;
+                return _writer.Output(FilterOrdersBySize(filterSize)).Result > 0 ?
+                    Task.FromResult(true) :
+                    Task.FromResult(false);
             }
             catch (Exception ex)
             {
-            }
-            if (canBeConverted == true)
-            {
-                return n;
-            }
-            else
-            {
-                return 0;
+                // TODO: Log the error to the configured output
+                return Task.FromResult(false);
             }
         }
-    }
-    // These are stub interfaces that already exist in the system
-    // They're out of scope of the code review
-    public interface IOrderWriter
-    {
-        void WriteOrders(IEnumerable<Order> orders);
-    }
-    public class OrderWriter : IOrderWriter
-    {
-        public void WriteOrders(IEnumerable<Order> orders)
+
+        /// <summary>
+        /// FilterOrdersBySize can be called from various methods - not just OutputItems
+        /// </summary>
+        private IEnumerable<IOrder> FilterOrdersBySize(int filterSize = (int)OrderSize.AnySize)
         {
+            return _repository.GetItems().Result.Where(o => o.Size <= filterSize).OrderBy(o => o.Price);
         }
-    }
-    public interface IOrderStore
-    {
-        List<Order> GetOrders();
     }
 }
