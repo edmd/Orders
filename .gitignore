@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Orders.Logic/obj
+/Orders.Logic/bin/Debug/netstandard2.0
